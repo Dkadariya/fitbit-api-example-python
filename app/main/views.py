@@ -26,6 +26,7 @@ def index():
             with fitbit_client(fitbit_creds) as client:
                 try:
                     profile_response = client.user_profile_get()
+                    print (profile_response)
                     user_profile = "{} has been on fitbit since {}".format(
                         profile_response['user']['fullName'],
                         profile_response['user']['memberSince']
@@ -35,10 +36,11 @@ def index():
         return render_template('index.html', user_profile=user_profile, permission_url=get_permission_screen_url())
 
 
-@main.route('/oauth-redirect', methods=['GET'])
+@main.route('/oauth-redirect', methods=['GET','POST'])
 @login_required
 def handle_redirect():
     code = request.args.get('code')
+    print (code)
     do_fitbit_auth(code, flask_login.current_user)
     return redirect(url_for('main.index'))
 
